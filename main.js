@@ -1,4 +1,4 @@
-var authorization = "Bearer ***"; // replace
+var authorization = "***"; // replace
 var ua = navigator.userAgentData.brands.map(brand => `"${brand.brand}";v="${brand.version}"`).join(', ');
 var client_tid = "***"; // replace
 var client_uuid = "***"; // replace
@@ -80,7 +80,8 @@ async function fetch_tweets(cursor, retry = 0) {
 		if (retry == 5) {
 			throw new Error("Max retries reached")
 		}
-		console.log(`(delete_tweets) Network response was not ok, retrying in ${10 * (1 + retry)} seconds`);
+		console.log(`(fetch_tweets) Network response was not ok, retrying in ${10 * (1 + retry)} seconds`);
+		console.log(response.text())
 		await sleep(10000 * (1 + retry));
 		return fetch_tweets(cursor, retry + 1)
 	}
@@ -93,7 +94,7 @@ async function fetch_tweets(cursor, retry = 0) {
 
 async function log_tweets(entries) {
 	for (let item of entries) {
-		if (item["entryId"].startsWith("profile-conversation")) {
+		if (item["entryId"].startsWith("profile-conversation") || item["entryId"].startsWith("tweet-")) {
 			findTweetIds(item)
 		}
 		else if (item["entryId"].startsWith("cursor-bottom") && entries.length > 2) {
@@ -190,7 +191,7 @@ async function delete_tweets(id_list) {
 			if (retry == 5) {
 				throw new Error("Max retries reached")
 			}
-			console.log(response)
+			console.log(response.text())
 			console.log(`(delete_tweets) Network response was not ok, retrying in ${10 * (1 + retry)} seconds`);
 			i -= 1;
 			await sleep(10000 * (1 + retry));
