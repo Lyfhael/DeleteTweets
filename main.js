@@ -1,7 +1,7 @@
-var authorization = "***"; // replace
+var authorization = "***"; // replace by authorization value
 var ua = navigator.userAgentData.brands.map(brand => `"${brand.brand}";v="${brand.version}"`).join(', ');
-var client_tid = "***"; // replace
-var client_uuid = "***"; // replace
+var client_tid = "***"; // replace by X-Client-Transaction-Id value
+var client_uuid = "***"; // replace by X-Client-Uuid value
 var csrf_token = getCookie("ct0");
 var random_resource = "uYU5M2i12UhDvDTzN6hZPg";
 var tweets_to_delete = []
@@ -77,6 +77,11 @@ async function fetch_tweets(cursor, retry = 0) {
 	});
 
 	if (!response.ok) {
+		if (response.status === 429) {
+			console.log("Rate limit reached. Waiting 1 minute")
+			await sleep(1000 * 60);
+			return fetch_tweets(cursor, retry + 1)
+		}
 		if (retry == 5) {
 			throw new Error("Max retries reached")
 		}
@@ -154,7 +159,6 @@ function findTweetIds(obj) {
 	recurse(obj);
 }
 
-
 async function delete_tweets(id_list) {
 	var delete_tid = "LuSa1GYxAMxWEugf+FtQ/wjCAUkipMAU3jpjkil3ujj7oq6munDCtNaMaFmZ8bcm7CaNvi4GIXj32jp7q32nZU8zc5CyLw"
 	var id_list_size = id_list.length
@@ -188,6 +192,12 @@ async function delete_tweets(id_list) {
 			"credentials": "include"
 		});
 		if (!response.ok) {
+			if (response.status === 429) {
+				console.log("Rate limit reached. Waiting 1 minute")
+				await sleep(1000 * 60);
+				i -= 1;
+				continue
+			}
 			if (retry == 5) {
 				throw new Error("Max retries reached")
 			}
@@ -201,7 +211,6 @@ async function delete_tweets(id_list) {
 		console.log(`${i}/${id_list_size}`)
 		await sleep(100);
 	}
-	console.log("DELETION COMPLETE")
 }
 
 var next = null
@@ -210,7 +219,9 @@ var entries = undefined
 while (next != "finished") {
 	entries = await fetch_tweets(next);
 	next = await log_tweets(entries);
-	await sleep(2000);
+	await delete_tweets(tweets_to_delete)
+	tweets_to_delete = []
+	await sleep(3000);
 }
 
-await delete_tweets(tweets_to_delete)
+console.log("DELETION COMPLETE (if error happened before this may be not true)")
