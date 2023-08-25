@@ -7,6 +7,15 @@ var random_resource = "uYU5M2i12UhDvDTzN6hZPg";
 var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
 var username = "***" // replace with your username
+var delete_options = {
+	"delete_message_with_url_only":false,
+	/*
+		match_any_keywords : if any of the strings is found, delete the tweet. It's OR not AND. Example : ["hello", "hi", "yo"]
+		if no words are given, it will match all. Can be combined with delete_message_with_url_only
+		links shouldn't be used as keywords.
+	*/
+	"match_any_keywords":["test"]
+}
 
 function buildAcceptLanguageString() {
 	const languages = navigator.languages;
@@ -111,10 +120,29 @@ async function log_tweets(entries) {
 	return "finished"
 }
 
+function check_keywords(text) {
+	if (delete_options["match_any_keywords"].length == 0) {
+		return true
+	}
+	for (let word of delete_options["match_any_keywords"]) {
+		if (text.includes(word))
+			return true
+	}
+	return false
+}
+
 function check_filter(tweet) {
-	if (tweet['legacy']['full_text'].includes("filter out this text"))
+	if (delete_options["delete_message_with_url_only"] == true)
+	{
+		if (tweet['legacy'].hasOwnProperty('entities') && tweet['legacy']["entities"].hasOwnProperty('urls') && tweet['legacy']["entities"]["urls"].length > 0
+			&& check_keywords(tweet['legacy']['full_text'])) {
+			return true
+		}
 		return false
-	return true
+	}
+	if (check_keywords(tweet['legacy']['full_text']))
+		return true
+	return false
 }
 
 function check_tweet_owner(obj, uid) {
