@@ -26,6 +26,7 @@ var delete_options = {
 }
 ```
 - You can also choose to remove tweets only if they contain a link in them. Just change `delete_message_with_url_only` to `true`. You can combine this option with the keywords option.
+- Edit 25/08/2023, you can now add tweet ids that you want to keep, so they won't get removed. It's the "tweets_to_ignore" property in the delete_options variable. Just add the tweet id in the array
 
 Now copy/paste the script in the console, press Enter, and wait for the deletion to complete. It should write "DELETION COMPLETE" in the console when it's over.
 When it's over, launch the script a second time, there sometime are a few leftovers.
