@@ -17,5 +17,15 @@ I use Google Chrome. I don't know if it will work elsewhere. It probably will, b
 - Now click on any request in the results, and look for the authorization/X-Client-Transaction-Id/X-Client-Uuid values, as in screenshot: ![pxN8nth](https://github.com/teisseire117/DeleteTweets/assets/43145883/8f6b0123-2f51-41da-a234-255c5bbb5589)
 - Now replace the values in the .js from this repository of the according variables, by the values of the three variables you found, here : ![hBH6SWy](https://github.com/teisseire117/DeleteTweets/assets/43145883/e985bc66-d028-4421-917e-1a118f8b3a31)
 
+## Filtering
+- You can filter which tweets to delete by editing the `delete_options` variable. For now you can decide to remove tweet that contain a certain keyword. For example if you want to delete tweets that contain the word "Hi" or "Hello"(case sensitive), change the variable to look like that :
+```
+var delete_options = {
+	"delete_message_with_url_only":false,
+	"match_any_keywords":["Hi", "Hello"]
+}
+```
+- You can also choose to remove tweets only if they contain a link in them. Just change `delete_message_with_url_only` to `true`. You can combine this option with the keywords option.
+
 Now copy/paste the script in the console, press Enter, and wait for the deletion to complete. It should write "DELETION COMPLETE" in the console when it's over.
 When it's over, launch the script a second time, there sometime are a few leftovers.
