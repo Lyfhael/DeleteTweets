@@ -8,14 +8,24 @@ var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
 var username = "***" // replace with your username
 var delete_options = {
-	/* delete_message_with_url_only: self explanatory, but will only delete tweets that contain links */
+	/* delete_message_with_url_only: self explanatory, but will delete tweets that contain links */
 	"delete_message_with_url_only":false,
 	/*
 		match_any_keywords : if any of the strings is found, delete the tweet. It's OR not AND. Example : ["hello", "hi", "yo"]
 		if no words are given, it will match all. Can be combined with delete_message_with_url_only
 		links shouldn't be used as keywords.
 	*/
-	"match_any_keywords":[]
+	"match_any_keywords":[""],
+	/*
+		tweets_to_ignore : give all the tweet ids that you want to keep.
+		To find the id of the tweet, click on it, then copy the number you find in the url
+		it looks like that : https://twitter.com/USERNAME/status/1695001000000000, the id here is 1695001000000000
+		It expects strings, so add the double-quotes around it, like that : ["1695001000000000"], you can give multiple ids ofc it's an array
+	*/
+	"tweets_to_ignore":[
+		"00000000000000", // these
+		"111111111111111", // ids
+		"222222222222"] // are examples, you can safely keep them or replace them by your own ids.
 }
 
 function buildAcceptLanguageString() {
@@ -133,6 +143,10 @@ function check_keywords(text) {
 }
 
 function check_filter(tweet) {
+	if (tweet['legacy'].hasOwnProperty('id_str')
+		&& ( delete_options["tweets_to_ignore"].includes(tweet['legacy']["id_str"]) || delete_options["tweets_to_ignore"].includes( parseInt(tweet['legacy']["id_str"]) ) )) {
+		return false
+	}
 	if (delete_options["delete_message_with_url_only"] == true)
 	{
 		if (tweet['legacy'].hasOwnProperty('entities') && tweet['legacy']["entities"].hasOwnProperty('urls') && tweet['legacy']["entities"]["urls"].length > 0
