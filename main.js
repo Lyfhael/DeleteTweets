@@ -8,6 +8,7 @@ var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
 var username = "***" // replace with your username
 var delete_options = {
+	/* delete_message_with_url_only: self explanatory, but will only delete tweets that contain links */
 	"delete_message_with_url_only":false,
 	/*
 		match_any_keywords : if any of the strings is found, delete the tweet. It's OR not AND. Example : ["hello", "hi", "yo"]
