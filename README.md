@@ -29,3 +29,7 @@ var delete_options = {
 
 Now copy/paste the script in the console, press Enter, and wait for the deletion to complete. It should write "DELETION COMPLETE" in the console when it's over.
 When it's over, launch the script a second time, there sometime are a few leftovers.
+
+# Support
+
+I allow tickets in French 🇫🇷 but prefer English if you can speak it, so everyone can understand.
