@@ -15,7 +15,7 @@ var delete_options = {
 		if no words are given, it will match all. Can be combined with delete_message_with_url_only
 		links shouldn't be used as keywords.
 	*/
-	"match_any_keywords":["test"]
+	"match_any_keywords":[]
 }
 
 function buildAcceptLanguageString() {
