@@ -34,3 +34,12 @@ When it's over, launch the script a second time, there sometime are a few leftov
 # Support
 
 I allow tickets in French 🇫🇷 but prefer English if you can speak it, so everyone can understand.
+
+
+# FAQ
+
+## Do I need to include the Bearer part of the authorization key ?
+Yes
+
+## I can't find X-Client-Transaction-Id/X-Client-Uuid/authorization
+In the request list, search for requests named `client_event.json`, they are the more frequent ones, and they always contain the tokens you need
