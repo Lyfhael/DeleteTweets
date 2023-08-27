@@ -8,6 +8,13 @@ I use Google Chrome. I don't know if it will work elsewhere. It probably will, b
 
 # Tutorial
 
+##  Video Tutorial
+https://github.com/teisseire117/DeleteTweets/assets/43145883/249584c3-ce01-424b-8ce5-751e976c8df0
+
+
+
+## Text Tutorial
+
 - Go to https://twitter.com/
 - Open the DevTools by pressing CTRL + SHIFT + I
 - Click on Network tab in the DevTools console
