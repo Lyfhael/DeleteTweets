@@ -1,4 +1,4 @@
-var authorization = "***"; // replace by authorization value
+var authorization = "Bearer ***"; // replace by authorization value
 var ua = navigator.userAgentData.brands.map(brand => `"${brand.brand}";v="${brand.version}"`).join(', ');
 var client_tid = "***"; // replace by X-Client-Transaction-Id value
 var client_uuid = "***"; // replace by X-Client-Uuid value
@@ -6,8 +6,10 @@ var csrf_token = getCookie("ct0");
 var random_resource = "uYU5M2i12UhDvDTzN6hZPg";
 var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
-var username = "***" // replace with your username
+var username = "YourUsernameHere" // replace with your username
 var delete_options = {
+	/*  unretweet: seems obvious, but it unretweet if set to true */
+	"unretweet":false,
 	/* delete_message_with_url_only: self explanatory, but will delete tweets that contain links */
 	"delete_message_with_url_only":false,
 	/*
@@ -161,7 +163,7 @@ function check_filter(tweet) {
 }
 
 function check_tweet_owner(obj, uid) {
-	if (obj.hasOwnProperty('legacy') && obj['legacy'].hasOwnProperty('retweeted') && obj['legacy']['retweeted'] === true)
+	if (obj.hasOwnProperty('legacy') && obj['legacy'].hasOwnProperty('retweeted') && obj['legacy']['retweeted'] === true && delete_options["unretweet"] == true)
 		return false
 	if (obj.hasOwnProperty('user_id_str') && obj['user_id_str'] === uid)
 		return true;
