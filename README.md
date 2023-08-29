@@ -1,4 +1,4 @@
-If you feel like my tool helped and you want to give a few bucks for it : https://ko-fi.com/lolarchiver# (it's not expected, I made this script because other services made people pay when it can be done for free without any additionnal cost, but I like if people have the choice to pay for it)
+If you feel like my tool helped and you want to give a few bucks for it : https://ko-fi.com/lolarchiver# (it's not expected, I made this script because other services made people pay when it can be done for free without any additionnal cost, and I prefer if people have the choice)
 
 # Disclaimer
 
