@@ -51,3 +51,7 @@ Yes
 
 ## I can't find X-Client-Transaction-Id/X-Client-Uuid/authorization
 In the request list, search for requests named `client_event.json`, they are the more frequent ones, and they always contain the tokens you need
+
+# Other
+
+https://ko-fi.com/lolarchiver# if you feel like it :D
