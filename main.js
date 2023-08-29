@@ -163,7 +163,7 @@ function check_filter(tweet) {
 }
 
 function check_tweet_owner(obj, uid) {
-	if (obj.hasOwnProperty('legacy') && obj['legacy'].hasOwnProperty('retweeted') && obj['legacy']['retweeted'] === true && delete_options["unretweet"] == true)
+	if (obj.hasOwnProperty('legacy') && obj['legacy'].hasOwnProperty('retweeted') && obj['legacy']['retweeted'] === true && delete_options["unretweet"] == false)
 		return false
 	if (obj.hasOwnProperty('user_id_str') && obj['user_id_str'] === uid)
 		return true;
