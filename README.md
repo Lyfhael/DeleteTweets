@@ -1,3 +1,5 @@
+If you feel like my tool helped and you want to give a few bucks for it : https://ko-fi.com/lolarchiver# (it's not expected, I made this script because other services made people pay when it can be done for free without any additionnal cost, but I like if people have the choice to pay for it)
+
 # Disclaimer
 
 It should work just fine, I regularly use the script myself, but if anything wrong happens I am not taking any responsibility. Do not use this script if the 0.1% possible failure scares you.
