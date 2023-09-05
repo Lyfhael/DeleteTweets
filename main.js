@@ -113,8 +113,12 @@ async function fetch_tweets(cursor, retry = 0) {
 		return fetch_tweets(cursor, retry + 1)
 	}
 	const data = await response.json();
-	const entries = data["data"]["user"]["result"]["timeline_v2"]["timeline"]["instructions"][cursor ? 0 : 1]["entries"];
-
+	var entries = data["data"]["user"]["result"]["timeline_v2"]["timeline"]["instructions"]
+	for (item of entries) {
+		if (item["type"] == "TimelineAddEntries") {
+			entries = item["entries"]
+		}
+	}
 	console.log(entries);
 	return entries;
 }
