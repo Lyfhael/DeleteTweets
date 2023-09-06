@@ -52,6 +52,18 @@ Yes
 ## I can't find X-Client-Transaction-Id/X-Client-Uuid/authorization
 In the request list, search for requests named `client_event.json`, they are the more frequent ones, and they always contain the tokens you need
 
+## Uncaught TypeError: entries is not iterable
+
+If you have this error, in the script edit the random_resource variable from
+`var random_resource = "uYU5M2i12UhDvDTzN6hZPg";`
+to
+`var random_resource = "Q6aAvPw7azXZbqXzuqTALA";`
+
+Then go to the fetch_tweets() function and change the feature variable to:
+`var feature = `&features=%7B%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D"`
+
+And it should work :) Also I updated the script on 5/09/2023 so if you got the script before that date, it's most likely outdated and you need to get the new one.
+
 # Other
 
 https://ko-fi.com/lolarchiver# if you feel like it :D
