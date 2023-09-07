@@ -15,7 +15,7 @@ var delete_options = {
 	/*
 		match_any_keywords : if any of the strings is found, delete the tweet. It's OR not AND. Example : ["hello", "hi", "yo"]
 		if no words are given, it will match all. Can be combined with delete_message_with_url_only
-		links shouldn't be used as keywords.
+		links shouldn't be used as keywords.  
 	*/
 	"match_any_keywords":[""],
 	/*
