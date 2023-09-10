@@ -29,7 +29,7 @@ var delete_options = {
 		"00000000000000", // these
 		"111111111111111", // ids
 		"222222222222"], // are examples, you can safely keep them or replace them by your own ids.
-	/* old_tweets : IF the script worked without any error but haven't deleted some old tweets, set this to true.*/
+	/* old_tweets : IF the script worked without any error but hasn't deleted some old tweets, set this to true.*/
 	"old_tweets":false
 }
 
