@@ -9,6 +9,8 @@ var language_code = navigator.language.split("-")[0]
 var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
 var username = "YourUsernameHere" // replace with your username
+var stop_signal = undefined
+
 var delete_options = {
 	/*  unretweet: seems obvious, but it unretweet if set to true */
 	"unretweet":false,
@@ -179,6 +181,9 @@ function check_date(tweet) {
 		if (tweet_date > delete_options["after_date"] && tweet_date < delete_options["before_date"]) {
 			return true
 		}
+		else if (tweet_date < delete_options["after_date"]) {
+			stop_signal = true
+		}
 		return false
 	}
 	return true
@@ -301,7 +306,7 @@ async function delete_tweets(id_list) {
 var next = null
 var entries = undefined
 
-while (next != "finished") {
+while (next != "finished" && stop_signal != true) {
 	entries = await fetch_tweets(next);
 	next = await log_tweets(entries);
 	await delete_tweets(tweets_to_delete)
