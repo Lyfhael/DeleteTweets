@@ -25,6 +25,19 @@ https://github.com/teisseire117/DeleteTweets/assets/43145883/249584c3-ce01-424b-
 - Now replace the values in the .js from this repository of the according variables, by the values of the three variables you found, here is an example of how it should look in the end : ![E0M6Bf9](https://github.com/teisseire117/DeleteTweets/assets/43145883/bac5806b-9c76-4018-b2c0-55fb9080e715)
 
 ## Filtering / Options
+- You can now choose to delete only tweets that are within a specific date range. For this, edit "before_date" and "after_date" in the `delete_options` variable. These will look like that :
+```
+	"after_date":new Date('1900-01-01'), // year-month-day
+	"before_date":new Date('2100-01-01') // year-month-day
+```
+Say you want to delete tweets that happened on July 3rd 2023. You would set the date to that :
+```
+	"after_date":new Date('2023-07-02'), // year-month-day
+	"before_date":new Date('2023-07-04') // year-month-day
+```
+It means : Delete tweet AFTER July 2nd 2023, and BEFORE July 4th 2023. These two dates are not included, so it's only what's in-between these dates, and what's before 2nd and 4th, you got it, 3rd.
+
+
 - You can filter which tweets to delete by editing the `delete_options` variable. For now you can decide to remove tweet that contain a certain keyword. For example if you want to delete tweets that contain the word "Hi" or "Hello"(case sensitive), change the variable to look like that :
 ```
 var delete_options = {
