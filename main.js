@@ -5,6 +5,7 @@ var client_uuid = "***"; // replace by X-Client-Uuid value
 var csrf_token = getCookie("ct0");
 var random_resource = "uYU5M2i12UhDvDTzN6hZPg";
 var random_resource_old_tweets = "H8OOoI-5ZE4NxgRr8lfyWg"
+var language_code = navigator.language.split("-")[0]
 var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
 var username = "YourUsernameHere" // replace with your username
@@ -103,7 +104,7 @@ async function fetch_tweets(cursor, retry = 0) {
 			"x-csrf-token": csrf_token,
 			"x-twitter-active-user": "yes",
 			"x-twitter-auth-type": "OAuth2Session",
-			"x-twitter-client-language": "fr"
+			"x-twitter-client-language": language_code
 		},
 		"referrer": `https://twitter.com/${username}/with_replies`,
 		"referrerPolicy": "strict-origin-when-cross-origin",
@@ -246,7 +247,7 @@ async function delete_tweets(id_list) {
 				"x-csrf-token": csrf_token,
 				"x-twitter-active-user": "yes",
 				"x-twitter-auth-type": "OAuth2Session",
-				"x-twitter-client-language": "fr"
+				"x-twitter-client-language": language_code
 			},
 			"referrer": `https://twitter.com/${username}/with_replies`,
 			"referrerPolicy": "strict-origin-when-cross-origin",
