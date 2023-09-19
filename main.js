@@ -32,7 +32,15 @@ var delete_options = {
 		"222222222222" // are examples, you can safely keep them or replace them by your own ids.
 	],
 	/* old_tweets : IF the script worked without any error but haven't deleted some old tweets, set this to true.*/
-	"old_tweets":false
+	"old_tweets":false,
+	/*
+		after_date // before_date : allows you to delete tweets that belong in a specific time frame
+		In the example below, tweets that were made before 2100-01-01 AND after 1900-01-01 will be deleted. (these dates are not included. It's AFTER and BEFORE)
+		Let's say you want to delete tweets from past 6 months. Today is September 19th 2023.
+		You would set after_date to 2023-03-18 (effectively 6 months ago) and before_date 2023-09-20 (tomorrow's date. So it deletes tweets from today too) 
+	*/
+	"after_date":new Date('1900-01-01'), // year-month-day
+	"before_date":new Date('2100-01-01') // year-month-day
 }
 
 function buildAcceptLanguageString() {
@@ -164,6 +172,18 @@ function check_keywords(text) {
 	return false
 }
 
+function check_date(tweet) {
+	if (tweet['legacy'].hasOwnProperty('created_at')) {
+		tweet_date = new Date(tweet['legacy']["created_at"])
+		tweet_date.setHours(0, 0, 0, 0);
+		if (tweet_date > delete_options["after_date"] && tweet_date < delete_options["before_date"]) {
+			return true
+		}
+		return false
+	}
+	return true
+}
+
 function check_filter(tweet) {
 	if (tweet['legacy'].hasOwnProperty('id_str')
 		&& ( delete_options["tweets_to_ignore"].includes(tweet['legacy']["id_str"]) || delete_options["tweets_to_ignore"].includes( parseInt(tweet['legacy']["id_str"]) ) )) {
@@ -172,12 +192,12 @@ function check_filter(tweet) {
 	if (delete_options["delete_message_with_url_only"] == true)
 	{
 		if (tweet['legacy'].hasOwnProperty('entities') && tweet['legacy']["entities"].hasOwnProperty('urls') && tweet['legacy']["entities"]["urls"].length > 0
-			&& check_keywords(tweet['legacy']['full_text'])) {
+			&& check_keywords(tweet['legacy']['full_text']) && check_date(tweet)) {
 			return true
 		}
 		return false
 	}
-	if (check_keywords(tweet['legacy']['full_text']))
+	if (check_keywords(tweet['legacy']['full_text']) && check_date(tweet))
 		return true
 	return false
 }
