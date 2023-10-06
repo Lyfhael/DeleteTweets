@@ -14,8 +14,18 @@ var stop_signal = undefined
 var delete_options = {
 	/*  unretweet: seems obvious, but it unretweet if set to true */
 	"unretweet":false,
+	/* do_not_remove_pinned_tweet: THIS CAN FAIL. Twitter has too many different way to format their response that I cannot guarantee this to work 100%
+	   It should work for newer tweets. HOWEVER, use the "tweets_to_ignore" below and put in your pinned tweet ID, this will work 100%.
+	   'why do you make this option then', this is a safeguard for people that forgot to add their pinned tweet in the ignore list.
+	*/
+	"do_not_remove_pinned_tweet":true,
 	/* delete_message_with_url_only: self explanatory, but will delete tweets that contain links */
 	"delete_message_with_url_only":false,
+	/* delete_specific_ids_only: Array of tweet IDs that the script will delete. The script will not delete anything else than these IDs. Any other option will be ignored.
+	   a tweet id is the number you see on the right of the url: https://twitter.com/USERNAME/status/1695001000000000
+	   an example of how the array can look like : ["1695001000000000", "1303001000000000"] don't forget the quotes ""
+	*/
+	"delete_specific_ids_only":[""],
 	/*
 		match_any_keywords : if any of the strings is found, delete the tweet. It's OR not AND. Example : ["hello", "hi", "yo"]
 		if no words are given, it will match all. Can be combined with delete_message_with_url_only
@@ -223,7 +233,8 @@ function tweetFound(obj) {
 
 function findTweetIds(obj) {
 	function recurse(currentObj) {
-		if (typeof currentObj !== 'object' || currentObj === null) {
+		if (typeof currentObj !== 'object' || currentObj === null
+		|| (delete_options["do_not_remove_pinned_tweet"] == true && currentObj['__type'] == "TimelinePinEntry")) {
 			return;
 		}
 
@@ -306,12 +317,17 @@ async function delete_tweets(id_list) {
 var next = null
 var entries = undefined
 
-while (next != "finished" && stop_signal != true) {
-	entries = await fetch_tweets(next);
-	next = await log_tweets(entries);
-	await delete_tweets(tweets_to_delete)
-	tweets_to_delete = []
-	await sleep(3000);
+if (delete_options["delete_specific_ids_only"].length == 1 && delete_options["delete_specific_ids_only"][0].length == 0) {
+	while (next != "finished" && stop_signal != true) {
+		entries = await fetch_tweets(next);
+		next = await log_tweets(entries);
+		await delete_tweets(tweets_to_delete)
+		tweets_to_delete = []
+		await sleep(3000);
+	}
+}
+else {
+	await delete_tweets(delete_options["delete_specific_ids_only"]);
 }
 
 console.log("DELETION COMPLETE (if error happened before this may be not true)")
