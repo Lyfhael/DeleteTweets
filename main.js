@@ -20,7 +20,7 @@ var delete_options = {
 		You can combine this with options: unretweet, match_any_keywords, tweets_to_ignore, after/before date
 		others will be ignored
 	 */
-	"from_archive":false,
+	"from_archive":true,
 	/*  unretweet: seems obvious, but it unretweet if set to true */
 	"unretweet":false,
 	/* do_not_remove_pinned_tweet: THIS CAN FAIL. Twitter has too many different way to format their response that I cannot guarantee this to work 100%
@@ -277,7 +277,8 @@ function parseTweetsFromArchive(data) {
 				tweet_obj["id"] = item.tweet.id_str
 				tweet_obj["text"] = item.tweet.full_text
 				tweet_obj["date"] = item.tweet.created_at
-                if (!isInReplyToExcludedUser && (delete_options["unretweet"] == startsWithRT)
+                if (!isInReplyToExcludedUser
+					&& ((delete_options["unretweet"] == true && startsWithRT) || (delete_options["unretweet"] == false && !startsWithRT))
 					&& check_filter_archive(tweet_obj)) {
 					;
 				}
