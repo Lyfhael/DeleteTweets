@@ -278,7 +278,7 @@ function parseTweetsFromArchive(data) {
 				tweet_obj["text"] = item.tweet.full_text
 				tweet_obj["date"] = item.tweet.created_at
                 if (!isInReplyToExcludedUser
-					&& ((delete_options["unretweet"] == true && startsWithRT) || (delete_options["unretweet"] == false && !startsWithRT))
+					&& ((delete_options["unretweet"] == true && startsWithRT == true) || (delete_options["unretweet"] == false && startsWithRT == false))
 					&& check_filter_archive(tweet_obj)) {
 					;
 				}
