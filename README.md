@@ -51,6 +51,7 @@ var delete_options = {
 - Edit 10/09/2023, IF the script removed some tweets but not all, AND that there were no error thrown, then you can set the option "old_tweets":false to true in the delete_options object. Then launch the script again, and it should delete these older tweets.
 - Edit 06/10/2023, new delete_options : do_not_remove_pinned_tweet, it is set to true by default so you don't remove your pinned tweet by mistake.
 - Edit 07/10/2023, added "delete_specific_ids_only" option. Override the default tweet search, and only remove tweets from their IDs that you have put in this option(it's an array)
+- Edit 07/12/2023, added from_archive option. It's WAY faster, no rate-limit, and it's more complete. Download your archive from Twitter then enable from_archive by setting it to true in the script, then you'll see a box asking you to drag your tweets.js file in it.
 
 Now copy/paste the script in the console, press Enter, and wait for the deletion to complete. It should write "DELETION COMPLETE" in the console when it's over.
 When it's over, launch the script a second time, there sometime are a few leftovers.
