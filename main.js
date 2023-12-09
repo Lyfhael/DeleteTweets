@@ -20,7 +20,7 @@ var delete_options = {
 		You can combine this with options: unretweet, match_any_keywords, tweets_to_ignore, after/before date
 		others will be ignored
 	 */
-	"from_archive":true,
+	"from_archive":false,
 	/*  unretweet: seems obvious, but it unretweet if set to true */
 	"unretweet":false,
 	/* do_not_remove_pinned_tweet: THIS CAN FAIL. Twitter has too many different way to format their response that I cannot guarantee this to work 100%
