@@ -1,14 +1,14 @@
-var authorization = "Bearer ***"; // replace by authorization value
+var authorization = "Bearer AAAAAAAAAAAAAAAAAAAAANRILgAAAAAAnNwIzUejRCOuH5E6I8xnZz4puTs%3D1Zv7ttfk8LF81IUq16cHjhLTvJu4FA33AGWWjCpTnA"; // replace by authorization value
 var ua = navigator.userAgentData.brands.map(brand => `"${brand.brand}";v="${brand.version}"`).join(', ');
-var client_tid = "***"; // replace by X-Client-Transaction-Id value
-var client_uuid = "***"; // replace by X-Client-Uuid value
+var client_tid = "jtHmHVhif0cpgWTl15lFFDjuVKRc40HP51hlz41fAn6zTO6lxVkuuR6YhUjJZyhZFZP89I/Mqv0zOX6ZFCa57MtPoLoMjw"; // replace by X-Client-Transaction-Id value
+var client_uuid = "60e3abc6-c515-4dff-9862-9116fc2bccf5"; // replace by X-Client-Uuid value
 var csrf_token = getCookie("ct0");
 var random_resource = "uYU5M2i12UhDvDTzN6hZPg";
 var random_resource_old_tweets = "H8OOoI-5ZE4NxgRr8lfyWg"
 var language_code = navigator.language.split("-")[0]
 var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
-var username = "YourUsernameHere" // replace with your username
+var username = "uemura_chaude" // replace with your username
 var stop_signal = undefined
 var twitter_archive_content = undefined
 var twitter_archive_loading_confirmed = false
@@ -29,7 +29,7 @@ var delete_options = {
 	*/
 	"do_not_remove_pinned_tweet":true,
 	/* delete_message_with_url_only: self explanatory, but will delete tweets that contain links */
-	"delete_message_with_url_only":false,
+	"delete_message_with_url_only":true,
 	/* delete_specific_ids_only: Array of tweet IDs that the script will delete. The script will not delete anything else than these IDs. Any other option will be ignored.
 	   a tweet id is the number you see on the right of the url: https://twitter.com/USERNAME/status/1695001000000000
 	   an example of how the array can look like : ["1695001000000000", "1303001000000000"] don't forget the quotes ""
@@ -61,7 +61,7 @@ var delete_options = {
 		You would set after_date to 2023-03-18 (effectively 6 months ago) and before_date 2023-09-20 (tomorrow's date. So it deletes tweets from today too) 
 	*/
 	"after_date":new Date('1900-01-01'), // year-month-day
-	"before_date":new Date('2100-01-01') // year-month-day
+	"before_date":new Date('2024-01-01') // year-month-day
 }
 
 function buildAcceptLanguageString() {
