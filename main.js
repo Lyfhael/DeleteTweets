@@ -31,7 +31,7 @@ var delete_options = {
 	/* delete_message_with_url_only: self explanatory, but will delete tweets that contain links */
 	"delete_message_with_url_only":false,
 	/* delete_specific_ids_only: Array of tweet IDs that the script will delete. The script will not delete anything else than these IDs. Any other option will be ignored.
-	   a tweet id is the number you see on the right of the url: https://twitter.com/USERNAME/status/1695001000000000
+	   a tweet id is the number you see on the right of the url: https://x.com/USERNAME/status/1695001000000000
 	   an example of how the array can look like : ["1695001000000000", "1303001000000000"] don't forget the quotes ""
 	*/
 	"delete_specific_ids_only":[""],
@@ -44,7 +44,7 @@ var delete_options = {
 	/*
 		tweets_to_ignore : give all the tweet ids that you want to keep.
 		To find the id of the tweet, click on it, then copy the number you find in the url
-		it looks like that : https://twitter.com/USERNAME/status/1695001000000000, the id here is 1695001000000000
+		it looks like that : https://x.com/USERNAME/status/1695001000000000, the id here is 1695001000000000
 		It expects strings, so add the double-quotes around it, like that : ["1695001000000000"], you can give multiple ids ofc it's an array
 	*/
 	"tweets_to_ignore":[
@@ -101,7 +101,7 @@ async function fetch_tweets(cursor, retry = 0) {
 	let final_cursor = cursor ? `%22cursor%22%3A%22${cursor}%22%2C` : "";
 	let resource = delete_options["old_tweets"] ? random_resource_old_tweets : random_resource
 	let endpoint =  delete_options["old_tweets"] ? "UserTweets" : "UserTweetsAndReplies"
-	var base_url = `https://twitter.com/i/api/graphql/${resource}/${endpoint}`;
+	var base_url = `https://x.com/i/api/graphql/${resource}/${endpoint}`;
 
 	var variable = ""
 	var feature = ""
@@ -135,7 +135,7 @@ async function fetch_tweets(cursor, retry = 0) {
 			"x-twitter-auth-type": "OAuth2Session",
 			"x-twitter-client-language": language_code
 		},
-		"referrer": `https://twitter.com/${username}/with_replies`,
+		"referrer": `https://x.com/${username}/with_replies`,
 		"referrerPolicy": "strict-origin-when-cross-origin",
 		"body": null,
 		"method": "GET",
@@ -332,7 +332,7 @@ async function delete_tweets(id_list) {
 	var retry = 0
 
 	for (let i = 0; i < id_list_size; ++i) {
-		const response = await fetch("https://twitter.com/i/api/graphql/VaenaVgh5q5ih7kvyVjgtg/DeleteTweet", {
+		const response = await fetch("https://x.com/i/api/graphql/VaenaVgh5q5ih7kvyVjgtg/DeleteTweet", {
 			"headers": {
 				"accept": "*/*",
 				"accept-language": buildAcceptLanguageString(),
@@ -351,7 +351,7 @@ async function delete_tweets(id_list) {
 				"x-twitter-auth-type": "OAuth2Session",
 				"x-twitter-client-language": language_code
 			},
-			"referrer": `https://twitter.com/${username}/with_replies`,
+			"referrer": `https://x.com/${username}/with_replies`,
 			"referrerPolicy": "strict-origin-when-cross-origin",
 			"body": `{\"variables\":{\"tweet_id\":\"${id_list[i]}\",\"dark_request\":false},\"queryId\":\"VaenaVgh5q5ih7kvyVjgtg\"}`,
 			"method": "POST",
