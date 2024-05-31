@@ -375,7 +375,7 @@ async function delete_tweets(id_list) {
 			continue
 		}
 		retry = 0
-		console.log(`${i}/${id_list_size}`)
+		console.log(`${i+1}/${id_list_size}`)
 		await sleep(100);
 	}
 }
