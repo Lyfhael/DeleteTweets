@@ -1,10 +1,12 @@
 var authorization = "Bearer ***"; // replace by authorization value
 var ua = navigator.userAgentData.brands.map(brand => `"${brand.brand}";v="${brand.version}"`).join(', ');
 var client_tid = "***"; // replace by X-Client-Transaction-Id value
-var client_uuid = "***"; // replace by X-Client-Uuid value
 var csrf_token = getCookie("ct0");
-var random_resource = "uYU5M2i12UhDvDTzN6hZPg";
-var random_resource_old_tweets = "H8OOoI-5ZE4NxgRr8lfyWg"
+// Updated 2025-04: X changed GraphQL resource IDs. Get the current one from your browser's Network tab
+// on the Replies tab (search for "UserTweetsAndReplies") and copy the XXXX from the URL.
+// Current known good values: 61HQnvcGP870hiE-hCbG4A (main), JdM0wU0wE0FtMgFEBMNzhQ (old tweets)
+var random_resource = "61HQnvcGP870hiE-hCbG4A";
+var random_resource_old_tweets = "JdM0wU0wE0FtMgFEBMNzhQ";
 var language_code = navigator.language.split("-")[0]
 var tweets_to_delete = []
 var user_id = getCookie("twid").substring(4);
@@ -92,29 +94,124 @@ function getCookie(name) {
 	if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
+function toQueryString(params) {
+  return Object.entries(params)
+    .map(([key, value]) =>
+      `${encodeURIComponent(key)}=${encodeURIComponent(JSON.stringify(value))}`
+    )
+    .join("&");
+}
+
 async function sleep(ms) {
 	return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function fetch_tweets(cursor, retry = 0) {
+	let old_tweets = delete_options["old_tweets"] == true;
 	let count = "20";
-	let final_cursor = cursor ? `%22cursor%22%3A%22${cursor}%22%2C` : "";
-	let resource = delete_options["old_tweets"] ? random_resource_old_tweets : random_resource
-	let endpoint =  delete_options["old_tweets"] ? "UserTweets" : "UserTweetsAndReplies"
+	let resource = old_tweets ? random_resource_old_tweets : random_resource
+	let endpoint =  old_tweets ? "UserTweets" : "UserTweetsAndReplies"
 	var base_url = `https://x.com/i/api/graphql/${resource}/${endpoint}`;
 
 	var variable = ""
 	var feature = ""
-	if (delete_options["old_tweets"] == false) {
-		variable = `?variables=%7B%22userId%22%3A%22${user_id}%22%2C%22count%22%3A${count}%2C${final_cursor}%22includePromotedContent%22%3Atrue%2C%22withCommunity%22%3Atrue%2C%22withVoice%22%3Atrue%2C%22withV2Timeline%22%3Atrue%7D`;
-		feature = `&features=%7B%22rweb_lists_timeline_redesign_enabled%22%3Atrue%2C%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D`;
+	if (!old_tweets) {
+		variable = toQueryString({
+			variables: {
+				userId: `${user_id}`,
+				count: Number(count),
+				includePromotedContent: true,
+				withCommunity: true,
+				withVoice: true,
+				withV2Timeline: true,
+				...(cursor && { cursor })
+			}
+		});
+
+		feature = toQueryString({
+			features: {
+				rweb_video_screen_enabled: false,
+				profile_label_improvements_pcf_label_in_post_enabled: true,
+				responsive_web_profile_redirect_enabled: false,
+				rweb_tipjar_consumption_enabled: true,
+				verified_phone_label_enabled: false,
+				creator_subscriptions_tweet_preview_api_enabled: true,
+				responsive_web_graphql_timeline_navigation_enabled: true,
+				responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+				premium_content_api_read_enabled: false,
+				communities_web_enable_tweet_community_results_fetch: true,
+				c9s_tweet_anatomy_moderator_badge_enabled: true,
+				responsive_web_grok_analyze_button_fetch_trends_enabled: false,
+				responsive_web_grok_analyze_post_followups_enabled: true,
+				responsive_web_jetfuel_frame: true,
+				responsive_web_grok_share_attachment_enabled: true,
+				articles_preview_enabled: true,
+				responsive_web_edit_tweet_api_enabled: true,
+				graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+				view_counts_everywhere_api_enabled: true,
+				longform_notetweets_consumption_enabled: true,
+				responsive_web_twitter_article_tweet_consumption_enabled: true,
+				tweet_awards_web_tipping_enabled: false,
+				responsive_web_grok_show_grok_translated_post: false,
+				responsive_web_grok_analysis_button_from_backend: true,
+				creator_subscriptions_quote_tweet_preview_enabled: false,
+				freedom_of_speech_not_reach_fetch_enabled: true,
+				standardized_nudges_misinfo: true,
+				tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+				longform_notetweets_rich_text_read_enabled: true,
+				longform_notetweets_inline_media_enabled: true,
+				responsive_web_grok_image_annotation_enabled: true,
+				responsive_web_grok_imagine_annotation_enabled: true,
+				responsive_web_grok_community_note_auto_translation_is_enabled: false,
+				responsive_web_enhance_cards_enabled: false
+			},
+			fieldToggles: {
+				withArticlePlainText: false
+			}
+		});
 	}
 	else {
-		variable = `?variables=%7B%22userId%22%3A%22${user_id}%22%2C%22count%22%3A${count}%2C${final_cursor}%22includePromotedContent%22%3Atrue%2C%22withQuickPromoteEligibilityTweetFields%22%3Atrue%2C%22withVoice%22%3Atrue%2C%22withV2Timeline%22%3Atrue%7D`
-		feature = `&features=%7B%22responsive_web_graphql_exclude_directive_enabled%22%3Atrue%2C%22verified_phone_label_enabled%22%3Afalse%2C%22creator_subscriptions_tweet_preview_api_enabled%22%3Atrue%2C%22responsive_web_graphql_timeline_navigation_enabled%22%3Atrue%2C%22responsive_web_graphql_skip_user_profile_image_extensions_enabled%22%3Afalse%2C%22tweetypie_unmention_optimization_enabled%22%3Atrue%2C%22responsive_web_edit_tweet_api_enabled%22%3Atrue%2C%22graphql_is_translatable_rweb_tweet_is_translatable_enabled%22%3Atrue%2C%22view_counts_everywhere_api_enabled%22%3Atrue%2C%22longform_notetweets_consumption_enabled%22%3Atrue%2C%22responsive_web_twitter_article_tweet_consumption_enabled%22%3Afalse%2C%22tweet_awards_web_tipping_enabled%22%3Afalse%2C%22freedom_of_speech_not_reach_fetch_enabled%22%3Atrue%2C%22standardized_nudges_misinfo%22%3Atrue%2C%22tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled%22%3Atrue%2C%22longform_notetweets_rich_text_read_enabled%22%3Atrue%2C%22longform_notetweets_inline_media_enabled%22%3Atrue%2C%22responsive_web_media_download_video_enabled%22%3Afalse%2C%22responsive_web_enhance_cards_enabled%22%3Afalse%7D`
+		variable = toQueryString({
+			variables: {
+				userId: `${user_id}`,
+				count: Number(count),
+				includePromotedContent: true,
+				withQuickPromoteEligibilityTweetFields: true,
+				withVoice: true,
+				withV2Timeline: true,
+				...(cursor && { cursor })
+			}
+		});
+
+		feature = toQueryString({
+			features: {
+				responsive_web_graphql_exclude_directive_enabled: true,
+				verified_phone_label_enabled: false,
+				creator_subscriptions_tweet_preview_api_enabled: true,
+				responsive_web_graphql_timeline_navigation_enabled: true,
+				responsive_web_graphql_skip_user_profile_image_extensions_enabled: false,
+				tweetypie_unmention_optimization_enabled: true,
+				responsive_web_edit_tweet_api_enabled: true,
+				graphql_is_translatable_rweb_tweet_is_translatable_enabled: true,
+				view_counts_everywhere_api_enabled: true,
+				longform_notetweets_consumption_enabled: true,
+				responsive_web_twitter_article_tweet_consumption_enabled: false,
+				tweet_awards_web_tipping_enabled: false,
+				freedom_of_speech_not_reach_fetch_enabled: true,
+				standardized_nudges_misinfo: true,
+				tweet_with_visibility_results_prefer_gql_limited_actions_policy_enabled: true,
+				longform_notetweets_rich_text_read_enabled: true,
+				longform_notetweets_inline_media_enabled: true,
+				responsive_web_media_download_video_enabled: false,
+				responsive_web_enhance_cards_enabled: false
+			},
+			fieldToggles: {
+				withArticlePlainText: false
+			}
+		});
 	}
 
-	var final_url = `${base_url}${variable}${feature}`;
+	var final_url = `${base_url}?${variable}&${feature}`;
 
 	const response = await fetch(final_url, {
 		"headers": {
@@ -129,7 +226,6 @@ async function fetch_tweets(cursor, retry = 0) {
 			"sec-fetch-mode": "cors",
 			"sec-fetch-site": "same-origin",
 			"x-client-transaction-id": client_tid,
-			"x-client-uuid": client_uuid,
 			"x-csrf-token": csrf_token,
 			"x-twitter-active-user": "yes",
 			"x-twitter-auth-type": "OAuth2Session",
@@ -158,7 +254,18 @@ async function fetch_tweets(cursor, retry = 0) {
 		return fetch_tweets(cursor, retry + 1)
 	}
 	const data = await response.json();
-	var entries = data["data"]["user"]["result"]["timeline_v2"]["timeline"]["instructions"]
+	var entries;
+	// New X API returns timeline_inline_items; fall back to timeline_v2 for older responses
+	if (data?.data?.user?.result?.timeline?.timeline?.instructions) {
+		entries = data.data.user.result.timeline.timeline.instructions;
+	} else if (data?.data?.user?.result?.timeline_v2?.timeline?.instructions) {
+		entries = data.data.user.result.timeline_v2.timeline.instructions;
+	} else if (data?.data?.user?.result?.timeline_inline_items?.timeline?.instructions) {
+		entries = data.data.user.result.timeline_inline_items.timeline.instructions;
+	} else {
+		console.error("Unexpected response structure:", JSON.stringify(data, null, 2).slice(0, 2000));
+		throw new Error("Cannot find timeline instructions in response");
+	}
 	for (item of entries) {
 		if (item["type"] == "TimelineAddEntries") {
 			entries = item["entries"]
@@ -345,7 +452,6 @@ async function delete_tweets(id_list) {
 				"sec-fetch-mode": "cors",
 				"sec-fetch-site": "same-origin",
 				"x-client-transaction-id": delete_tid,
-				"x-client-uuid": client_uuid,
 				"x-csrf-token": csrf_token,
 				"x-twitter-active-user": "yes",
 				"x-twitter-auth-type": "OAuth2Session",
